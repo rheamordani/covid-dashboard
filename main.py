@@ -3,12 +3,12 @@ import json
 from elasticsearch import Elasticsearch
 from datetime import datetime
 
-with urllib.request.urlopen('https://api.covidactnow.org/v2/state/CA.json?apiKey=74e6cc3af61e4a529530f672c3303c55') as response:
+with urllib.request.urlopen('https://api.covidactnow.org/v2/states.json?apiKey=74e6cc3af61e4a529530f672c3303c55') as response:
     data = json.load(response)
 
 # _source data for the Elasticsearch document
 doc_source = {
-    "string field": "some_index",
+    "string field": "covid_index",
     "integer field": 42,
     "boolean field": False,
     "timestamp": str(datetime.now())
@@ -16,7 +16,7 @@ doc_source = {
 
 # Elasticsearch document structure as a Python dict
 doc = {
-    "_index": "some_index",
+    "_index": "covid_index",
     "_id": 12345,
     "doc_type": "_doc",
     "_source": data,
@@ -28,7 +28,7 @@ print ("\nDOC json_str:", json_str)
 
 # build the Elasticsearch document from a dict
 build_doc = {}
-build_doc["_index"] = "some_index"
+build_doc["_index"] = "covid_index"
 build_doc["_id"] = 12345
 build_doc["doc_type"] = "_doc" # doc type deprecated
 build_doc["_source"] = data
@@ -54,7 +54,7 @@ try:
 
     # make an API call to the Elasticsearch cluster
     response = client.index(
-        index = 'some_index',
+        index = 'covid_index',
         doc_type = '_doc',
         id = json_id,
         body = json_source
@@ -78,7 +78,7 @@ print ("all_docs TYPE:", type(all_docs))
 try:
     # pass the JSON string in an API call to the Elasticsearch cluster
     response = client.search(
-        index = "some_index",
+        index = "covid_index",
         body = all_docs
     )
 
